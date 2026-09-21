@@ -1,0 +1,6 @@
+{
+  "name": "wagmecoin",
+  "description": "WAGME meme gallery and community showcase",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
