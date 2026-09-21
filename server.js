@@ -9,14 +9,23 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const staticDir = fs.existsSync(path.join(__dirname, 'dist', 'index.html'))
-  ? path.join(__dirname, 'dist')
-  : __dirname;
+const distDir = path.join(__dirname, 'dist');
+const publicDir = path.join(__dirname, 'public');
 
-app.use(express.static(staticDir));
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+}
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+}
+app.use(express.static(__dirname));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(staticDir, 'index.html'));
+  if (fs.existsSync(path.join(distDir, 'index.html'))) {
+    res.sendFile(path.join(distDir, 'index.html'));
+  } else {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  }
 });
 
 app.listen(PORT, '0.0.0.0', () => {
