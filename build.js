@@ -17,7 +17,7 @@ if (fs.existsSync(rootIndex)) {
   console.log('Copied index.html to dist/index.html');
 } else if (!fs.existsSync(distIndex)) {
   console.warn('Warning: index.html not found, creating default entry');
-  fs.writeFileSync(distIndex, '<!DOCTYPE html><html><head><title>WAGME</title></head><body><h1>WAGME</h1></body></html>');
+  fs.writeFileSync(distIndex, '<!DOCTYPE html><html><head><title>wagmecoin</title></head><body><h1>wagmecoin</h1></body></html>');
 }
 
 // Copy public directory assets to dist
@@ -25,6 +25,24 @@ const publicDir = path.join(__dirname, 'public');
 if (fs.existsSync(publicDir)) {
   fs.cpSync(publicDir, distDir, { recursive: true });
   console.log('Copied public assets to dist/');
+}
+
+// Copy app.js entrypoint to dist so Vercel's Express preset finds it
+const rootApp = path.join(__dirname, 'app.js');
+const distApp = path.join(distDir, 'app.js');
+if (fs.existsSync(rootApp)) {
+  fs.copyFileSync(rootApp, distApp);
+  // Also provide app.mjs as an additional alias
+  fs.copyFileSync(rootApp, path.join(distDir, 'app.mjs'));
+  console.log('Copied app.js to dist/app.js and dist/app.mjs');
+}
+
+// Copy package.json to dist for ESM module resolution
+const rootPkg = path.join(__dirname, 'package.json');
+const distPkg = path.join(distDir, 'package.json');
+if (fs.existsSync(rootPkg)) {
+  fs.copyFileSync(rootPkg, distPkg);
+  console.log('Copied package.json to dist/package.json');
 }
 
 console.log('Build completed successfully.');
